@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BEM helpers tests</title>
+  <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <div>
+        <div class="b-block">
+            <div class="b-block__elem1"></div>
+            <div class="b-block__elem1"></div>
+            <div class="b-block__elem2"></div>
+        </div>
+    </div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="../jquery.bemhelpers.js"></script>
+<script src="../bower_components/qunit/qunit/qunit.js"></script>
+<script>
+var $f = $('#qunit-fixture');
+test('setMod on a block, boolean', function() {
+    var $b = $f.find('.b-block');
+
+    $b.setMod('b-block', 'mod', true);
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod'), true);
+    });
+
+    $b.setMod('b-block', 'mod', false);
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod'), false);
+    });
+
+    $b.setMod('b-block', 'mod', true);
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod'), true);
+    });
+
+    $b.setMod('b-block', 'mod', false);
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod'), false);
+    });
+
+});
+
+test('setMod on a block, key/value', function() {
+    var $b = $f.find('.b-block');
+
+    $b.setMod('b-block', 'mod', 'val1');
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod_val1'), true);
+    });
+
+    $b.setMod('b-block', 'mod', 'val2');
+    $b.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block_mod_val2'), true);
+        strictEqual($el.hasClass('b-block_mod_val1'), false);
+    });
+});
+
+test('setMod on an element, boolean', function() {
+    var $elem = $f.find('.b-block__elem1');
+
+    $elem.setMod('b-block', 'elem1', 'mod', true);
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod'), true);
+    });
+
+    $elem.setMod('b-block', 'elem1', 'mod', false);
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod'), false);
+    });
+
+    $elem.setMod('b-block', 'elem1', 'mod', true);
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod'), true);
+    });
+
+    $elem.setMod('b-block', 'elem1', 'mod', false);
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod'), false);
+    });
+
+});
+
+test('setMod on an element, key/value', function() {
+    var $elem = $f.find('.b-block__elem1');
+
+    $elem.setMod('b-block', 'elem1', 'mod', 'bla');
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod_bla'), true);
+    });
+
+    $elem.setMod('b-block', 'elem1', 'mod', 'bla2');
+    $elem.each(function(i, el) {
+        var $el = $(el);
+        strictEqual($el.hasClass('b-block__elem1_mod_bla2'), true);
+        strictEqual($el.hasClass('b-block__elem1_mod_bla'), false);
+    });
+
+});
+
+asyncTest('trigger custom event on block modifier set, true', function() {
+    var $b = $f.find('.b-block');
+
+    $b
+        .one('setMod:b-block_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, true);
+            start();
+        })
+        .setMod('b-block', 'mod', true);
+
+});
+
+asyncTest('trigger custom event on block modifier set, false', function() {
+    var $b = $f.find('.b-block');
+
+    $b
+        .one('setMod:b-block_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, false);
+            start();
+        })
+        .setMod('b-block', 'mod', false);
+
+});
+
+asyncTest('trigger custom event on block modifier set, key/value, wildcard callback', function() {
+    var $b = $f.find('.b-block');
+
+    $b
+        .one('setMod:b-block_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, 'bla');
+            start();
+        })
+        .setMod('b-block', 'mod', 'bla');
+
+});
+
+asyncTest('trigger custom event on block modifier set, key/value, specific callback', function() {
+    var $b = $f.find('.b-block');
+
+    $b
+        .one('setMod:b-block_mod_bla', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, 'bla');
+            start();
+        })
+        .setMod('b-block', 'mod', 'bla');
+
+});
+
+asyncTest('trigger custom event on elem modifier set, true', function() {
+    var $elem = $f.find('.b-block__elem2');
+
+    $elem
+        .one('setMod:b-block__elem2_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, true);
+            start();
+        })
+        .setMod('b-block', 'elem2', 'mod', true);
+
+});
+
+asyncTest('trigger custom event on elem modifier set, false', function() {
+    var $elem = $f.find('.b-block__elem2');
+
+    $elem
+        .one('setMod:b-block__elem2_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, false);
+            start();
+        })
+        .setMod('b-block', 'elem2', 'mod', false);
+
+});
+
+asyncTest('trigger custom event on elem modifier set, key/value, wildcard callback', function() {
+    var $elem = $f.find('.b-block__elem2');
+
+    $elem
+        .one('setMod:b-block__elem2_mod_*', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, 'bla');
+            start();
+        })
+        .setMod('b-block', 'elem2', 'mod', 'bla');
+
+});
+
+asyncTest('trigger custom event on elem modifier set, key/value, specific callback', function() {
+    var $elem = $f.find('.b-block__elem2');
+
+    $elem
+        .one('setMod:b-block__elem2_mod_bla', function(e, data) {
+            strictEqual(data.modName, 'mod');
+            strictEqual(data.modVal, 'bla');
+            start();
+        })
+        .setMod('b-block', 'elem2', 'mod', 'bla');
+
+});
+
+</script>
+</body>
+</html>

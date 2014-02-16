@@ -2,16 +2,13 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.0.0
+ * @version 2.1.0
  * 
  */
 (function($, undefined) {
-    
-    var bemModMap = 'bemHelpers:modMap',  // unique key for jQuery data storage
-        // kind of a hash function to store callbacks
-        // for a specific block/element/modifier combo
-        getMapKey = function(block, elem, modName, modVal) {
-            return block + (elem !== undefined ? '__' + elem : '') + '_' + modName + '_' + (typeof modVal === 'boolean' ? '*' : (modVal || '*')); 
+
+    var getEventPattern = function(block, elem, modName, modVal) {
+            return block + (elem !== undefined ? '__' + elem : '') + '_' + modName + '_' + (typeof modVal === 'boolean' ? '*' : (modVal || '*'));
         },
         getElemClasses = function(domEl) {
             if (domEl.classList) {
@@ -20,7 +17,7 @@
                 return $.trim(domEl.className).split(/\s+/);
             }
         };
-    
+
     $.extend($.fn, {
         getMod: function(block, elem, modName) {
             if (modName === undefined) {
@@ -73,54 +70,19 @@
                     $this.addClass(classPattern + '_' + modVal);
                 }
                 
-                // the actions are run AFTER the class name is set
-                var modMap = $this.data(bemModMap);
-                if (modMap) {
-                    // universal callbacks for all modifier values '*' 
-                    var fnGlobalArrayRef = modMap[getMapKey(block, elem, modName)] || [],
-                        // specific values    
-                        fnArrayRef = modMap[getMapKey(block, elem, modName, modVal)] || [];
+                // after the modifier is set, run the corresponding custom event
+                var args = {
+                    modName: modName,
+                    modVal: modVal
+                };
 
-                    $.each(fnGlobalArrayRef.concat(fnArrayRef), function(i, fn) {
-                        // "this" is set to a current element
-                        fn.call(that, modName, modVal, block, elem);
-                    });
+                // trigger the wildcard event pattern first
+                $this.trigger('setMod:' + getEventPattern(block, elem, modName), args);
+                // for boolean modifiers, one can only use the wildcard pattern,
+                // so no need to trigger the same event twice
+                if (typeof modVal !== 'boolean') {
+                    $this.trigger('setMod:' + getEventPattern(block, elem, modName, modVal), args);
                 }
-            });
-        },
-        
-        onSetMod: function(block, elem, modMap) {
-            if (modMap === undefined) {
-                modMap = elem;
-                elem = undefined;
-            }
-            
-            return this.each(function() {
-                var $this = $(this),
-                    exModMap = $this.data(bemModMap);
-                
-                if (typeof exModMap !== 'object') {
-                    exModMap = {};
-                    $this.data(bemModMap, exModMap);
-                }
-                
-                $.each(modMap, function(modName, val) {
-                    var key;
-                    if ($.isFunction(val)) {
-                        key = getMapKey(block, elem, modName);
-                        exModMap[key] = exModMap[key] || [];
-                        exModMap[key].push(val);
-                    } else if (typeof val === 'object') {
-                        $.each(val, function(modVal, fn) {
-                            if ($.isFunction(fn)) {
-                                key = getMapKey(block, elem, modName, modVal);
-
-                                exModMap[key] = exModMap[key] || [];
-                                exModMap[key].push(fn);
-                            }
-                        });
-                    }
-                });
             });
         }
     });

@@ -1,0 +1,32 @@
+{
+  "name": "jquery-bemhelpers",
+  "version": "2.1.0",
+  "homepage": "https://github.com/ingdir/jquery-bemhelpers",
+  "authors": [
+    "Max Shirshin <max.shirshin@gmail.com>"
+  ],
+  "description": "jQuery helpers to use BEM methodology in your code",
+  "main": "jquery.bemhelpers.js",
+  "keywords": [
+    "BEM",
+    "БЭМ",
+    "block",
+    "element",
+    "modifier",
+    "setMod",
+    "getMod",
+    "onSetMod"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "qunit": "~1.14.0"
+  }
+}
