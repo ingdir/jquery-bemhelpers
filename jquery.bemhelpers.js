@@ -2,7 +2,7 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.1.0
+ * @version 2.1.1
  * 
  */
 (function($, undefined) {
@@ -12,7 +12,7 @@
         },
         getElemClasses = function(domEl) {
             if (domEl.classList) {
-                return domEl.classList;
+                return $.makeArray(domEl.classList);
             } else {
                 return $.trim(domEl.className).split(/\s+/);
             }
