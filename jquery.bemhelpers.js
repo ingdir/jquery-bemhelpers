@@ -52,8 +52,7 @@
             }
             
             return this.each(function() {
-                var that = this,
-                    $this = $(this),
+                var $this = $(this),
                     classPattern = block + (elem !== undefined ? '__' + elem : '') + '_' + modName;
                 
                 if (modVal === false) {
