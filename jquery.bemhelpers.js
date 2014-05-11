@@ -2,7 +2,7 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.1.1
+ * @version 2.1.2
  * 
  */
 (function($, undefined) {
@@ -71,6 +71,8 @@
                 
                 // after the modifier is set, run the corresponding custom event
                 var args = {
+                    block: block,
+                    elem: elem,
                     modName: modName,
                     modVal: modVal
                 };
