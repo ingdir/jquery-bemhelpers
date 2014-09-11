@@ -74,7 +74,7 @@ For an empty jQuery collection, the method would return `undefined`. This might 
 
 ## hasMod
 
-`.hasMod` checks whether the first item in a jQuery collection has a specified modifier specified on a specified block or element.
+`.hasMod` checks whether the first item in a jQuery collection has a modifier set on a specified block/element.
 
 Returns a boolean value. For key/value modifiers, return `true` if any modifier value is present, regardless of the actual value.
 
