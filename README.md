@@ -10,7 +10,7 @@ BEM is not tied to any particular implementation or framework. This jQuery plugi
 
 This implementation supports BEM naming convention introduced by [Yandex](http://yandex.com):
 
-  * CSS class names are used to denote BEN entities
+  * CSS class names are used to denote BEM entities
   * Blocks with and without prefix are supported
   * Elements: block<strong>__element</strong>
   * Boolean modifiers: block<strong>_mod</strong>, block__element<strong>_mod</strong>
