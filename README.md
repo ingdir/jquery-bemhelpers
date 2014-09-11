@@ -72,6 +72,24 @@ It returns boolean `true` for a boolean modifier that exists, a `String` modifie
 
 For an empty jQuery collection, the method would return `undefined`. This might be an inconsistency; I may change it later.
 
+## hasMod
+
+`.hasMod` checks whether the first item in a jQuery collection has a specified modifier specified on a specified block or element.
+
+Returns a boolean value. For key/value modifiers, return `true` if any modifier value is present, regardless of the actual value.
+
+For blocks:
+
+```javascript
+var hasMod = $('.b-block').hasMod('b-block', 'expanded');
+```
+
+For elements:
+
+```javascript
+var hasMod = $('.b-block__elem').hasMod('b-block', 'elem', 'expanded');
+```
+
 ## Event handlers
 
 For each modifier being set, a jQuery `setMod` event is being triggered that propagates up the DOM tree. It also contains metadata that lets you get additional information. This allows for callbacks being assigned to modifier changes.

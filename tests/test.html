@@ -218,6 +218,58 @@ asyncTest('trigger custom event on elem modifier set, key/value, specific callba
 
 });
 
+test('hasMod on a block, boolean mod', function() {
+    var $block = $f.find('.b-block');
+
+    $block.setMod('b-block', 'mod', true);
+    strictEqual($block.hasMod('b-block', 'mod'), true);
+
+    $block.setMod('b-block', 'mod', false);
+    strictEqual($block.hasMod('b-block', 'mod'), false);
+
+    $block.setMod('b-block', 'mod', true);
+    strictEqual($block.hasMod('b-block', 'mod'), true);
+});
+
+test('hasMod on an elem, boolean mod', function() {
+    var $elem = $f.find('.b-block__elem1');
+
+    $elem.setMod('b-block', 'elem1', 'mod', true);
+    strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), true);
+
+    $elem.setMod('b-block', 'elem1', 'mod', false);
+    strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), false);
+
+    $elem.setMod('b-block', 'elem1', 'mod', true);
+    strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), true);
+});
+
+test('hasMod on a block, key/value mod', function() {
+    var $block = $f.find('.b-block');
+
+    $block.setMod('b-block', 'mod', 'bla');
+    strictEqual($block.hasMod('b-block', 'mod'), true);
+
+    $block.setMod('b-block', 'mod', 'foo');
+    strictEqual($block.hasMod('b-block', 'mod'), true);
+
+    strictEqual($block.hasMod('b-block', 'mod2'), false);
+
+});
+
+test('hasMod on an elem, key/value mod', function() {
+    var $elem = $f.find('.b-block__elem1');
+
+    $elem.setMod('b-block', 'elem1', 'mod', 'bla');
+    strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), true);
+
+    $elem.setMod('b-block', 'elem1', 'mod', 'foo');
+    strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), true);
+
+    strictEqual($elem.hasMod('b-block', 'mod2'), false);
+});
+
+
 </script>
 </body>
 </html>

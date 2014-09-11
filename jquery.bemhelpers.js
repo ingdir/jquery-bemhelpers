@@ -2,7 +2,7 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.1.2
+ * @version 2.1.3
  * 
  */
 (function($, undefined) {
@@ -85,6 +85,10 @@
                     $this.trigger('setMod:' + getEventPattern(block, elem, modName, modVal), args);
                 }
             });
+        },
+
+        hasMod: function(block, elem, modName) {
+            return !! this.getMod(block, elem, modName);
         }
     });
     
