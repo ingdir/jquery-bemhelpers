@@ -1,0 +1,30 @@
+{
+  "name": "bemhelpers",
+  "title": "BEM helpers for jQuery",
+  "description": "Provides a set of helper methods to support BEM Methodology (http://bem.info) in your projects.",
+  "keywords": [
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "BEM",
+    "block",
+    "element",
+    "modifier",
+    "setMod",
+    "getMod",
+    "onSetMod"
+  ],
+  "version": "2.2.0",
+  "author": {
+    "name": "Max Shirshin",
+    "email": "max.shirshin@gmail.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/ingdir/jquery-bemhelpers/blob/master/LICENSE.txt"
+    }
+  ],
+  "homepage": "https://github.com/ingdir/jquery-bemhelpers",
+  "repository": "https://github.com/ingdir/jquery-bemhelpers",
+  "dependencies": {}
+}

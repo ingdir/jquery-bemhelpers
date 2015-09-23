@@ -4,11 +4,15 @@ BEM helpers for jQuery
 
 ## Why you might need it
 
-[BEM](http://bem.info) (Block, Element, Modifier) is a popular front-end methodology that introduces unified semantic entities across different frontend technologies such as CSS, HTML, JavaScript and templates.
+[BEM](http://getbem.com) (Block, Element, Modifier) is a popular front-end methodology that introduces unified semantic entities across different frontend technologies such as CSS, HTML, JavaScript and templates.
 
 BEM is not tied to any particular implementation or framework. This jQuery plugin provides basic support for working with modifiers and setting up callbacks based on modifier change.
 
-This implementation supports BEM naming convention introduced by [Yandex](http://yandex.com):
+## Naming convention
+
+This plugin supports multiple BEM naming conventions.
+
+By default, it uses BEM naming convention introduced by [Yandex](http://yandex.com):
 
   * CSS class names are used to denote BEM entities
   * Blocks with and without prefix are supported
@@ -16,7 +20,24 @@ This implementation supports BEM naming convention introduced by [Yandex](http:/
   * Boolean modifiers: block<strong>_mod</strong>, block__element<strong>_mod</strong>
   * Key/value modifiers: block<strong>_modname_modval</strong>, block__element<strong>_modname_modval</strong>
 
-There are plans to support alternative naming conventions; send me a message if you want a different BEM naming convention to be implemented.
+You can set alternative naming conventions by calling the `$.BEMsyntax` method:
+
+```javascript
+// to read the existing syntax
+var currentSyntax = $.BEMsyntax();
+
+// to set a new syntax
+var newSyntax = $.BEMsyntax({
+    elem: '__',  // separator between block and element name
+    modBefore: '--',  // separator between block/element and modifier name
+    modKeyVal: '_'  // separator between modifier key and modifier value
+});
+```
+
+You can omit some properties if you inherit them from a previously defined scheme or default Yandex scheme.
+Changes are effective immediately and persist until you change them again.
+
+`newSyntax` contains an object describing the new syntax (all fields).
 
 ## setMod
 
@@ -58,7 +79,7 @@ Key/value modifiers are different from boolean modifiers in that they have disti
 
 ## getMod
 
-This is a simple API to read modifier values. It only reads the *first* element in a jQuery collection, ignoring all others, and returns a primitive value based on what it finds.
+This is a simple API to read modifier values. It only reads the *first* element in a jQuery collection, ignoring all the rest, and returns a primitive value based on what it finds.
 
 For blocks:
 
@@ -102,6 +123,8 @@ For all modifiers (both boolean and key/value pairs), the custom event is formed
 
 `setMod:block_modName_*`  // for blocks
 `setMod:block__elem_modName_*`  // for elements
+
+If you define a custom BEM syntax with `$.BEMsyntax()` method, you should adjust your event name patterns accordingly. Events being triggered always use the current syntax.
 
 An asterisk `*` at the end of an event name means it's triggered for all modifier values. An object passed as a second argument to an event handler contains additional keys:
 

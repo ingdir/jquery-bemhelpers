@@ -2,13 +2,22 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.1.3
+ * @version 2.2.0
+ *
+ * @thanks K. for the inspiration <3
  * 
  */
 (function($, undefined) {
 
-    var getEventPattern = function(block, elem, modName, modVal) {
-            return block + (elem !== undefined ? '__' + elem : '') + '_' + modName + '_' + (typeof modVal === 'boolean' ? '*' : (modVal || '*'));
+    var BEMsyntax = {
+            elem: '__',
+            modBefore: '_',
+            modKeyVal: '_'
+        },
+        getEventPattern = function(block, elem, modName, modVal) {
+            return block + (elem !== undefined ? BEMsyntax.elem + elem : '') +
+                BEMsyntax.modBefore + modName + BEMsyntax.modKeyVal +
+                (typeof modVal === 'boolean' ? '*' : (modVal || '*'));
         },
         getElemClasses = function(domEl) {
             if (domEl.classList) {
@@ -18,6 +27,18 @@
             }
         };
 
+    $.BEMsyntax = function(props) {
+        if (typeof props !== 'object') props = {};
+
+        for (var prop in props) {
+            if (props.hasOwnProperty(prop) && BEMsyntax.hasOwnProperty(prop)) {
+                BEMsyntax[prop] = props[prop];
+            }
+        }
+
+        return $.extend({}, BEMsyntax);
+    };
+
     $.extend($.fn, {
         getMod: function(block, elem, modName) {
             if (modName === undefined) {
@@ -26,15 +47,18 @@
             }
             
             if (this.length) {
-                var classPattern = block + (elem !== undefined ? '__' + elem : '') + '_' + modName,
+                var classPattern = block + (elem !== undefined ? BEMsyntax.elem + elem : '') +
+                        BEMsyntax.modBefore + modName,
                     modVal = false;
                 
                 $.each(getElemClasses(this.get(0)), function(i, c) {
                     if (c === classPattern) {
                         modVal = true;
                         return false;
-                    } else if (c.indexOf(classPattern) === 0 && c.substr(classPattern.length, 1) === '_') {
-                        modVal = c.substr(classPattern.length + 1);
+                    } else if (c.indexOf(classPattern) === 0
+                        && c.substr(classPattern.length, BEMsyntax.modKeyVal.length) === BEMsyntax.modKeyVal) {
+
+                        modVal = c.substr(classPattern.length + BEMsyntax.modKeyVal.length);
                         return false;
                     }
                 });
@@ -53,7 +77,8 @@
             
             return this.each(function() {
                 var $this = $(this),
-                    classPattern = block + (elem !== undefined ? '__' + elem : '') + '_' + modName;
+                    classPattern = block + (elem !== undefined ? BEMsyntax.elem + elem : '') +
+                        BEMsyntax.modBefore + modName;
                 
                 if (modVal === false) {
                     $this.removeClass(classPattern);
@@ -61,12 +86,14 @@
                     $this.addClass(classPattern);
                 } else {
                     $.each(getElemClasses(this), function(i, c) {
-                        if (c.indexOf(classPattern) === 0 && c.substr(classPattern.length, 1) === '_') {
+                        if (c.indexOf(classPattern) === 0
+                            && c.substr(classPattern.length, BEMsyntax.modKeyVal.length) === BEMsyntax.modKeyVal) {
+
                             $this.removeClass(c);
                         }
                     });
                     
-                    $this.addClass(classPattern + '_' + modVal);
+                    $this.addClass(classPattern + BEMsyntax.modKeyVal + modVal);
                 }
                 
                 // after the modifier is set, run the corresponding custom event

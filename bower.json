@@ -1,6 +1,6 @@
 {
   "name": "jquery-bemhelpers",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "homepage": "https://github.com/ingdir/jquery-bemhelpers",
   "authors": [
     "Max Shirshin <max.shirshin@gmail.com>"
@@ -27,6 +27,7 @@
     "tests"
   ],
   "devDependencies": {
-    "qunit": "~1.14.0"
+    "qunit": "~1.19.0",
+    "jquery": "~2.1.4"
   }
 }
