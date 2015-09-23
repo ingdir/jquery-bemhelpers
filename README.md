@@ -8,7 +8,7 @@ BEM helpers for jQuery
 
 BEM is not tied to any particular implementation or framework. This jQuery plugin provides basic support for working with modifiers and setting up callbacks based on modifier change.
 
-This implementation supports BEM naming convention introduced by [Yandex](http://yandex.com):
+This implementation by default supports BEM naming convention introduced by [Yandex](http://yandex.com):
 
   * CSS class names are used to denote BEM entities
   * Blocks with and without prefix are supported
@@ -16,7 +16,19 @@ This implementation supports BEM naming convention introduced by [Yandex](http:/
   * Boolean modifiers: block<strong>_mod</strong>, block__element<strong>_mod</strong>
   * Key/value modifiers: block<strong>_modname_modval</strong>, block__element<strong>_modname_modval</strong>
 
-There are plans to support alternative naming conventions; send me a message if you want a different BEM naming convention to be implemented.
+You can use alternative naming conventions by calling the `$.setBEMsyntax` function:
+
+```javascript
+var newSyntax = $.setBEMsyntax({
+    elem: '__',  // separator between block and element name
+    modBefore: '--',  // separator between block/element and modifier name
+    modKeyVal: '_'  // separator between modifier key and modifier value
+});
+```
+
+You can omit some properties if you inherit them from the previously defined scheme or default Yandex scheme.
+Changes are effective immediately and persist until you change them again.
+`newSyntax` contains an object describing the new syntax (all fields).
 
 ## setMod
 
