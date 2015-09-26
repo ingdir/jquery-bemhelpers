@@ -1,7 +1,7 @@
 {
   "name": "bemhelpers",
   "title": "BEM helpers for jQuery",
-  "description": "Provides a set of helper methods to support BEM Methodology (http://bem.info) in your projects.",
+  "description": "Provides a set of helper methods to support BEM Methodology (http://getbem.com) in your projects.",
   "keywords": [
     "jquery-plugin",
     "ecosystem:jquery",
@@ -13,7 +13,7 @@
     "getMod",
     "onSetMod"
   ],
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": {
     "name": "Max Shirshin",
     "email": "max.shirshin@gmail.com"

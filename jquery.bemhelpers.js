@@ -2,7 +2,7 @@
  * jQuery plugin for basic BEM manipulations.
  * 
  * @author Max Shirshin
- * @version 2.2.0
+ * @version 2.2.1
  *
  * @thanks K. for the inspiration <3
  * 
