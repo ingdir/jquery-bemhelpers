@@ -78,6 +78,12 @@ function runTests(module, proposedSyntax) {
             assert.strictEqual($el.hasClass('b-block' + syntax.modBefore + 'mod' + syntax.modKeyVal + 'val2'), true);
             assert.strictEqual($el.hasClass('b-block' + syntax.modBefore + 'mod' + syntax.modKeyVal + 'val1'), false);
         });
+
+        $b.setMod('b-block', 'mod', '');
+        $b.each(function (i, el) {
+            var $el = $(el);
+            assert.strictEqual($el.hasClass('b-block' + syntax.modBefore + 'mod' + syntax.modKeyVal + 'val2'), false);
+        });
     });
 
     QUnit.test('setMod on an element, boolean', function(assert) {
@@ -125,6 +131,12 @@ function runTests(module, proposedSyntax) {
             assert.strictEqual($el.hasClass('b-block' + syntax.elem + 'elem1' + syntax.modBefore + 'mod' + syntax.modKeyVal + 'bla'), false);
         });
 
+        $elem.setMod('b-block', 'elem1', 'mod', '');
+        $elem.each(function (i, el) {
+            var $el = $(el);
+            assert.strictEqual($el.hasClass('b-block' + syntax.elem + 'elem1' + syntax.modBefore + 'mod' + syntax.modKeyVal + 'bla2'), false);
+        });
+
     });
 
     QUnit.test('trigger custom event on block modifier set, true', function(assert) {
@@ -166,6 +178,20 @@ function runTests(module, proposedSyntax) {
                     start();
                 })
                 .setMod('b-block', 'mod', 'bla');
+
+    });
+
+    QUnit.test('trigger custom event on block modifier set, removing key/value, wildcard callback', function(assert) {
+        var $b = $f.find('.b-block');
+        var start = assert.async();
+
+        $b
+                .one('setMod:b-block' + syntax.modBefore + 'mod' + syntax.modKeyVal + '*', function (e, data) {
+                    assert.strictEqual(data.modName, 'mod');
+                    assert.strictEqual(data.modVal, '');
+                    start();
+                })
+                .setMod('b-block', 'mod', '');
 
     });
 
@@ -224,6 +250,19 @@ function runTests(module, proposedSyntax) {
 
     });
 
+    QUnit.test('trigger custom event on elem modifier set, removing key/value, wildcard callback', function(assert) {
+        var $elem = $f.find('.b-block' + syntax.elem + 'elem2');
+        var start = assert.async();
+        $elem
+                .one('setMod:b-block' + syntax.elem + 'elem2' + syntax.modBefore + 'mod' + syntax.modKeyVal + '*', function (e, data) {
+                    assert.strictEqual(data.modName, 'mod');
+                    assert.strictEqual(data.modVal, '');
+                    start();
+                })
+                .setMod('b-block', 'elem2', 'mod', '');
+
+    });
+
     QUnit.test('trigger custom event on elem modifier set, key/value, specific callback', function(assert) {
         var $elem = $f.find('.b-block' + syntax.elem + 'elem2');
         var start = assert.async();
@@ -273,6 +312,9 @@ function runTests(module, proposedSyntax) {
         $block.setMod('b-block', 'mod', 'foo');
         assert.strictEqual($block.hasMod('b-block', 'mod'), true);
 
+        $block.setMod('b-block', 'mod', '');
+        assert.strictEqual($block.hasMod('b-block', 'mod'), false);
+
         assert.strictEqual($block.hasMod('b-block', 'mod2'), false);
 
     });
@@ -285,6 +327,9 @@ function runTests(module, proposedSyntax) {
 
         $elem.setMod('b-block', 'elem1', 'mod', 'foo');
         assert.strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), true);
+
+        $elem.setMod('b-block', 'elem1', 'mod', '');
+        assert.strictEqual($elem.hasMod('b-block', 'elem1', 'mod'), false);
 
         assert.strictEqual($elem.hasMod('b-block', 'mod2'), false);
     });

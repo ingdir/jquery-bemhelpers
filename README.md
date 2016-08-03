@@ -1,6 +1,6 @@
 # jquery-bemhelpers
 
-BEM helpers for jQuery 
+BEM helpers for jQuery
 
 ## Why you might need it
 
@@ -54,6 +54,10 @@ According to BEM, the DOM element that receives a modifier also needs the origin
 
 Example usage:
 ```javascript
+// Add 'hidden' boolean modifier to the 'b-widget' block
+$('.b-widget').setMod('b-widget', 'hidden', true);
+
+// Remove 'hidden' boolean modifier from the 'b-widget' block
 $('.b-widget').setMod('b-widget', 'hidden', false);
 ```
 
@@ -71,11 +75,22 @@ Key/value modifiers are different from boolean modifiers in that they have disti
 
 *modVal* should not be a boolean value, otherwise it will be treated as a boolean modifier.
 
+If you also set *modVal* to an empty `String` `''`, the modifier will be removed.
+
+Example usage:
+```javascript
+// Add 'theme' key/value modifier to the 'b-widget' block
+$('.b-widget').setMod('b-widget', 'theme', 'light');
+
+// Remove 'theme' key/value modifier from the 'b-widget' block
+$('.b-widget').setMod('b-widget', 'theme', '');
+```
+
 ### Set a key/value modifier on an element:
 
 `.setMod(blockName, elemName, modName, modVal)`
 
-*modVal* should not be a boolean value.
+Same as above, but the second argument is an element name. *modVal* should not also be a boolean value.
 
 ## getMod
 
@@ -121,24 +136,10 @@ For each modifier being set, a custom jQuery event fires which unique name is fo
 
 For all modifiers (both boolean and key/value pairs), the custom event is formed like this:
 
-`setMod:block_modName_*`  // for blocks
-`setMod:block__elem_modName_*`  // for elements
+For blocks: `setMod:block_modName_*`  
+For elements: `setMod:block__elem_modName_*`
 
-If you define a custom BEM syntax with `$.BEMsyntax()` method, you should adjust your event name patterns accordingly. Events being triggered always use the current syntax.
-
-An asterisk `*` at the end of an event name means it's triggered for all modifier values. An object passed as a second argument to an event handler contains additional keys:
-
-   * `block` — block name
-   * `elem` — element name (`undefined` if modifier is set on a block level)
-   * `modName` — modifier name
-   * `modVal` — modifier value that is set: a boolean `true`/`false` for boolean modifiers, a `String` value for key/value modifiers
-
-For key/value modifier *only*, and *additional* event is triggered which is specific to a modifier value being set. Its custom name is formed like this:
-
-`setMod:block_modName_modVal`  // for blocks
-`setMod:block__elem_modName_modVal`  // for elements
-
-Example:
+**NOTE**: If you define a custom BEM syntax with `$.BEMsyntax()` method, you should adjust your event name patterns accordingly. Events being triggered always use the current syntax.
 
 ```javascript
 $(document).on('setMod:widget_init_*', function(e, data) {
@@ -158,3 +159,38 @@ $('div.widget').setMod('widget', 'init', true);
 
 */
 ```
+
+An asterisk `*` at the end of an event name means it's triggered for all modifier values. An object passed as a second argument to an event handler contains additional keys:
+
+   * `block` — block name
+   * `elem` — element name (`undefined` if modifier is set on a block level)
+   * `modName` — modifier name
+   * `modVal` — modifier value that is set: a boolean `true`/`false` for boolean modifiers, a `String` value for key/value modifiers
+
+**TIP**: For key/value modifier *only*, an *additional* event is triggered which is specific to a modifier value being set. Its custom name is formed like this:
+
+For blocks: `setMod:block_modName_modVal`  
+For elements: `setMod:block__elem_modName_modVal`
+
+```javascript
+$(document).on('setMod:widget_theme_light', function(e, data) {
+    console.log('Block name:', data.block);
+    console.log('Element name:', data.elem);  // undefined, as it's a block-level modifier
+    console.log('Modifier name:', data.modName);
+    console.log('Modifier value:', data.modVal);
+});
+
+$('div.widget').setMod('widget', 'theme', 'light');
+/* Console output:
+
+>  Block name: widget
+>  Element name: undefined
+>  Modifier name: theme
+>  Modifier value: light
+
+*/
+```
+
+So as an example if you set `setMod:widget_theme_light` event listener, then it will be triggered *only* if you set the `theme` key/value modifier's value to `light`. Any other values won't trigger the event listener.
+
+**NOTE**: Please also note that if you have removed the string modifier value by setting it to an empty `String`, `$('div.widget').setMod('widget', 'theme', '');` then the specific event listener won't again be triggered obviously! In such cases you might consider setting the wild-card event listener, just like how you set it for boolean modifiers: `setMod:widget_theme_*`.

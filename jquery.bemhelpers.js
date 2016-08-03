@@ -1,11 +1,11 @@
 /**
  * jQuery plugin for basic BEM manipulations.
- * 
+ *
  * @author Max Shirshin
  * @version 2.2.1
  *
  * @thanks K. for the inspiration <3
- * 
+ *
  */
 (function($, undefined) {
 
@@ -45,12 +45,12 @@
                 modName = elem;
                 elem = undefined;
             }
-            
+
             if (this.length) {
                 var classPattern = block + (elem !== undefined ? BEMsyntax.elem + elem : '') +
                         BEMsyntax.modBefore + modName,
                     modVal = false;
-                
+
                 $.each(getElemClasses(this.get(0)), function(i, c) {
                     if (c === classPattern) {
                         modVal = true;
@@ -62,24 +62,24 @@
                         return false;
                     }
                 });
-                
+
                 return modVal;
-                
+
             } else return undefined;
         },
-        
+
         setMod: function(block, elem, modName, modVal) {
             if (modVal === undefined) {
                 modVal = modName;
                 modName = elem;
                 elem = undefined;
             }
-            
+
             return this.each(function() {
                 var $this = $(this),
                     classPattern = block + (elem !== undefined ? BEMsyntax.elem + elem : '') +
                         BEMsyntax.modBefore + modName;
-                
+
                 if (modVal === false) {
                     $this.removeClass(classPattern);
                 } else if (modVal === true) {
@@ -92,10 +92,17 @@
                             $this.removeClass(c);
                         }
                     });
-                    
-                    $this.addClass(classPattern + BEMsyntax.modKeyVal + modVal);
+
+                    // We have removed the modifier class above, now check only
+                    // if 'modVal' is NOT an empty string, then set a new
+                    // modifier class according to its value. Otherwise
+                    // (if 'modVal' is an empty String) don't do anything!
+                    // Because user liked to remove the modifier class totally
+                    if (modVal !== '') {
+                        $this.addClass(classPattern + BEMsyntax.modKeyVal + modVal);
+                    }
                 }
-                
+
                 // after the modifier is set, run the corresponding custom event
                 var args = {
                     block: block,
@@ -108,7 +115,7 @@
                 $this.trigger('setMod:' + getEventPattern(block, elem, modName), args);
                 // for boolean modifiers, one can only use the wildcard pattern,
                 // so no need to trigger the same event twice
-                if (typeof modVal !== 'boolean') {
+                if (typeof modVal !== 'boolean' && modVal !== '') {
                     $this.trigger('setMod:' + getEventPattern(block, elem, modName, modVal), args);
                 }
             });
@@ -118,5 +125,5 @@
             return !! this.getMod(block, elem, modName);
         }
     });
-    
+
 })(jQuery);
